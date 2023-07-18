@@ -17,13 +17,28 @@ export class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   formSubmit = ({ name, number }) => {
     const newContact = {
       name,
       number,
       id: nanoid(),
     };
-    console.log("App  newContact", newContact)
+    console.log('App  newContact', newContact);
 
     const isExist = this.state.contacts.some(
       contact =>
@@ -83,21 +98,6 @@ export class App extends React.Component {
   resetFilter = () => {
     this.setState({ filter: '' });
   };
-
-  componentDidMount() {
-    const contacts = localStorage.getItem("contacts");
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-    }
-  }
 
   render() {
     const {
